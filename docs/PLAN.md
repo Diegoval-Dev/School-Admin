@@ -48,11 +48,11 @@ Marca cada check `[x]` al completarlo. Una fase = código + tests + commit. No a
 - **Tests:** unicidad (matrícula, materia, unidad); rango válido; promedio correcto.
 
 ## Fase 5 — Respaldos y seguridad  (docs/SEGURIDAD_Y_RESPALDOS.md)
-- [ ] `services/respaldos.py`: respaldo con `sqlite3.Connection.backup()`, verificación con `integrity_check`, rotación, copia secundaria.
+- [x] `services/respaldos.py`: respaldo con `sqlite3.Connection.backup()`, verificación con `integrity_check`, rotación, copia secundaria.
 - [ ] Respaldo automático al iniciar, al cerrar limpiamente y cada 2 h con la app abierta. Respaldo previo a toda migración.
 - [ ] Pantalla **Respaldos** (solo Directora): lista, "Respaldar ahora", "Descargar respaldo (.zip)", ruta secundaria (USB), aviso en la pantalla de inicio si el último respaldo externo tiene > 7 días.
 - [ ] **Restaurar:** script `restaurar_respaldo.py` / acceso directo "Restaurar respaldo" del instalador. Antes de restaurar, respalda el estado actual; confirma con doble aviso.
-- [ ] **Exportar todo a Excel** (un libro con una hoja por tabla principal) como respaldo legible por humanos.
+- [x] **Exportar todo a Excel** (un libro con una hoja por tabla principal) como respaldo legible por humanos.
 - [ ] Al arrancar: `integrity_check`; si falla, ofrecer restaurar el último respaldo bueno automáticamente.
 - [ ] Bloqueo de instancia única (si ya está corriendo, abrir el navegador en la instancia existente y salir).
 - **Tests (obligatorios):** respaldo produce archivo válido y restaurable; rotación conserva lo correcto y nunca borra los 5 más recientes; restaurar guarda copia previa; migración fallida → restaura; doble instancia bloqueada.

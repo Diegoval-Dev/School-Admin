@@ -143,6 +143,12 @@ UNFOLD = {
                     {"title": "Calificaciones", "icon": "edit_note", "link": reverse_lazy("notas_tabla")},
                 ],
             },
+            {
+                "title": "Sistema",
+                "items": [
+                    {"title": "Respaldos", "icon": "backup", "link": reverse_lazy("respaldos_tabla")},
+                ],
+            },
         ],
     },
 }
