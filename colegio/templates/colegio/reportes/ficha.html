@@ -1,0 +1,60 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Ficha del estudiante</title>
+  <style>
+    @page { size: letter; margin: 1.5cm; }
+    body { font-family: Arial, sans-serif; font-size: 10pt; }
+    .encabezado { display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #000; padding-bottom: 6px; }
+    .encabezado img { width: 64px; }
+    .encabezado h1 { font-size: 13pt; margin: 0; }
+    h2 { font-size: 11pt; margin: 14px 0 6px; border-bottom: 1px solid #000; }
+    dl { display: grid; grid-template-columns: 180px 1fr; gap: 4px 10px; margin: 0; }
+    dt { font-weight: 700; }
+    ul { margin: 0; padding-left: 18px; }
+    .acciones { margin: 12px 0; }
+    @media print { .acciones { display: none; } }
+  </style>
+</head>
+<body>
+  {% include "colegio/reportes/_encabezado.html" with jornada_texto="—" grado_texto="—" %}
+  <h2>Datos del estudiante</h2>
+  <dl>
+    <dt>Código</dt><dd>{{ estudiante.codigo }}</dd>
+    <dt>Nombre completo</dt><dd>{{ estudiante.nombre_completo }}</dd>
+    <dt>Fecha de nacimiento</dt><dd>{{ estudiante.fecha_nacimiento|date:"d/m/Y"|default:"—" }} {% if estudiante.edad %}({{ estudiante.edad }} años){% endif %}</dd>
+    <dt>Género</dt><dd>{{ estudiante.get_genero_display }}</dd>
+    <dt>Nacionalidad</dt><dd>{{ estudiante.get_nacionalidad_display }}</dd>
+    <dt>Documento</dt><dd>{{ estudiante.get_tipo_documento_display }} {{ estudiante.numero_documento }}</dd>
+    <dt>Estado</dt><dd>{{ estudiante.get_estado_display }}</dd>
+  </dl>
+
+  <h2>Responsables</h2>
+  <ul>
+    {% for responsable in estudiante.responsables.all %}
+      <li>{{ responsable.get_relacion_display }}: {{ responsable.nombre_completo }} ({{ responsable.get_tipo_documento_display }} {{ responsable.numero_documento }})</li>
+    {% empty %}<li>Sin responsables registrados.</li>{% endfor %}
+  </ul>
+
+  <h2>Contactos</h2>
+  <ul>
+    {% for contacto in estudiante.contactos.all %}<li>{{ contacto.telefono }} · {{ contacto.nombre_responsable }}</li>
+    {% empty %}<li>Sin contactos registrados.</li>{% endfor %}
+  </ul>
+
+  <h2>Direcciones</h2>
+  <ul>
+    {% for direccion in estudiante.direcciones.all %}<li>{{ direccion.direccion }}</li>
+    {% empty %}<li>Sin direcciones registradas.</li>{% endfor %}
+  </ul>
+
+  <h2>Historial académico</h2>
+  <ul>
+    {% for matricula in estudiante.matriculas.all %}
+      <li>{{ matricula.ciclo.anio }} · {{ matricula.get_grado_display }} · {{ matricula.get_jornada_display }}{% if not matricula.activa %} (inactiva){% endif %}</li>
+    {% empty %}<li>Sin matrículas registradas.</li>{% endfor %}
+  </ul>
+  <p class="acciones"><button onclick="window.print()">Imprimir</button></p>
+</body>
+</html>

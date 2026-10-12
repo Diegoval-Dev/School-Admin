@@ -193,6 +193,14 @@ def paquete_de_descarga(db: Path, carpeta: Path) -> bytes:
     return buffer.getvalue()
 
 
+def nivel_aviso_copia_externa(dias_sin_copia: int | None) -> str | None:
+    if dias_sin_copia is None or dias_sin_copia > DIAS_URGENTE_COPIA_EXTERNA:
+        return "urgente"
+    if dias_sin_copia > DIAS_AVISO_COPIA_EXTERNA:
+        return "aviso"
+    return None
+
+
 def respaldar_si_hubo_cambios(db: Path, carpeta: Path) -> Path | None:
     ultimos = listar_respaldos(carpeta)
     if ultimos and db.stat().st_mtime <= ultimos[0].fecha.timestamp():

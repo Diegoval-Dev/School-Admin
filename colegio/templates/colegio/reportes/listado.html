@@ -1,0 +1,41 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Listado de estudiantes</title>
+  <style>
+    @page { size: letter; margin: 1.5cm; }
+    body { font-family: Arial, sans-serif; font-size: 10pt; }
+    .encabezado { display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #000; padding-bottom: 6px; }
+    .encabezado img { width: 64px; }
+    .encabezado h1 { font-size: 13pt; margin: 0; }
+    .encabezado p { margin: 4px 0 0; }
+    h2 { text-align: center; font-size: 12pt; margin: 12px 0; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #000; padding: 3px 4px; text-align: left; }
+    .acciones { margin: 12px 0; }
+    @media print { .acciones { display: none; } }
+  </style>
+</head>
+<body>
+  {% include "colegio/reportes/_encabezado.html" with jornada_texto=jornada_texto grado_texto=grado_texto %}
+  <h2>Listado de estudiantes</h2>
+  <table>
+    <thead><tr><th>No.</th><th>Código</th><th>Apellidos</th><th>Nombres</th><th>Edad</th></tr></thead>
+    <tbody>
+      {% for matricula in matriculas %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ matricula.estudiante.codigo }}</td>
+          <td>{{ matricula.estudiante.apellidos }}</td>
+          <td>{{ matricula.estudiante.nombres }}</td>
+          <td>{{ matricula.estudiante.edad|default_if_none:"" }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5">No hay estudiantes en este grado y jornada.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="acciones"><button onclick="window.print()">Imprimir</button></p>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Inicio</h1>
+
+{% for alerta in alertas %}
+  <p class="alerta {{ alerta.nivel }}">{{ alerta.mensaje }}</p>
+{% endfor %}
+
+<form method="get" action="{% url 'inicio' %}" class="buscador">
+  <label for="buscar">Buscar estudiante (código, nombre, apellido o documento)</label>
+  <div class="fila-buscador">
+    <input id="buscar" type="search" name="q" value="{{ consulta }}" autofocus>
+    <button type="submit">Buscar</button>
+  </div>
+</form>
+{% if consulta %}
+  <ul class="resultados">
+    {% for estudiante in resultados %}
+      <li><a href="{% url 'admin:colegio_estudiante_change' estudiante.pk %}">{{ estudiante.nombre_completo }}</a> · {{ estudiante.codigo }} · {{ estudiante.get_estado_display }}</li>
+    {% empty %}
+      <li>No se encontró ningún estudiante con "{{ consulta }}".</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<div class="accesos">
+  <a href="{% url 'admin:colegio_estudiante_changelist' %}">Estudiantes</a>
+  <a href="{% url 'pagos_tabla' %}">Pagos</a>
+  <a href="{% url 'asistencia_tabla' %}">Asistencia</a>
+  <a href="{% url 'notas_tabla' %}">Notas</a>
+  <a href="{% url 'admin:colegio_docente_changelist' %}">Docentes</a>
+  {% if es_directora %}<a href="{% url 'respaldos_tabla' %}">Respaldos</a>{% endif %}
+</div>
+<style>
+  .alerta { padding: 12px 14px; border-radius: 8px; font-weight: 600; background: #fef3c7; }
+  .alerta.urgente { background: #fee2e2; color: #7f1d1d; }
+  .buscador label { display: block; font-weight: 600; margin: 16px 0 6px; }
+  .fila-buscador { display: flex; gap: 8px; max-width: 640px; }
+  .fila-buscador input { flex: 1; padding: 12px; font-size: 1.05rem; }
+  .resultados { margin-top: 12px; }
+  .accesos { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-top: 24px; }
+  .accesos a { display: flex; align-items: center; justify-content: center; min-height: 96px; background: #1f6feb; color: #fff; border-radius: 12px; font-size: 1.15rem; font-weight: 700; text-decoration: none; }
+</style>
+{% endblock %}

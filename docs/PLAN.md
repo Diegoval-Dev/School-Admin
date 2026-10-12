@@ -58,10 +58,10 @@ Marca cada check `[x]` al completarlo. Una fase = código + tests + commit. No a
 - **Tests (obligatorios):** respaldo produce archivo válido y restaurable; rotación conserva lo correcto y nunca borra los 5 más recientes; restaurar guarda copia previa; migración fallida → restaura; doble instancia bloqueada.
 
 ## Fase 6 — Reportes, pulido y manual
-- [ ] Inicio: buscador global de estudiantes, accesos rápidos grandes (Estudiantes, Pagos, Asistencia, Notas, Docentes, Respaldos), alertas (respaldo viejo, pagos pendientes del mes).
-- [ ] Reportes extra: listado de estudiantes por grado/jornada, estudiantes retirados/graduados (históricos), ficha del estudiante imprimible.
+- [x] Inicio: buscador global de estudiantes, accesos rápidos grandes (Estudiantes, Pagos, Asistencia, Notas, Docentes, Respaldos), alertas (respaldo viejo, pagos pendientes del mes).
+- [x] Reportes extra: listado de estudiantes por grado/jornada, estudiantes retirados/graduados (históricos), ficha del estudiante imprimible.
 - [ ] Revisión visual en pantallas 1366×768 y 1920×1080. Textos claros, sin jerga. Mensajes de error comprensibles.
-- [ ] `docs/MANUAL_DIRECTORA.md`: instalar, abrir, crear usuarios, registrar estudiante/pago/asistencia/notas, hacer y restaurar respaldos, qué hacer si algo falla. 1–2 páginas, pasos numerados.
+- [x] `docs/MANUAL_DIRECTORA.md`: instalar, abrir, crear usuarios, registrar estudiante/pago/asistencia/notas, hacer y restaurar respaldos, qué hacer si algo falla. 1–2 páginas, pasos numerados.
 - [ ] Opcional (solo si sobra tiempo): tarifas por grado para autocompletar el monto del pago.
 
 ## Fase 7 — Empaquetado e instalador  (docs/EMPAQUETADO.md)

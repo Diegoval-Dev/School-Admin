@@ -1,0 +1,20 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Estudiantes retirados y graduados</h1>
+<table>
+  <thead><tr><th>Estudiante</th><th>Código</th><th>Estado</th><th>Último ciclo</th><th></th></tr></thead>
+  <tbody>
+    {% for estudiante in estudiantes %}
+      <tr>
+        <td>{{ estudiante.nombre_completo }}</td>
+        <td>{{ estudiante.codigo }}</td>
+        <td>{{ estudiante.get_estado_display }}</td>
+        <td>{% with ultima=estudiante.matriculas.all|first %}{{ ultima.ciclo.anio|default:"—" }}{% endwith %}</td>
+        <td><a href="{% url 'reporte_ficha' estudiante.pk %}" target="_blank">Ficha</a> · <a href="{% url 'admin:colegio_estudiante_change' estudiante.pk %}">Ver</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5">No hay estudiantes retirados ni graduados.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

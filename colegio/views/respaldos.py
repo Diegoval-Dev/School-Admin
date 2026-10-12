@@ -11,9 +11,9 @@ from colegio.permisos import solo_directora
 from colegio.services import configuracion
 from colegio.services.exportar_excel import libro_completo
 from colegio.services.respaldos import (
-    DIAS_AVISO_COPIA_EXTERNA,
-    DIAS_URGENTE_COPIA_EXTERNA,
     dias_sin_copia_externa,
+    listar_respaldos,
+    nivel_aviso_copia_externa,
     listar_respaldos,
     paquete_de_descarga,
     respaldar_completo,
@@ -32,14 +32,6 @@ def _ruta_db() -> Path:
     return Path(settings.DATABASES["default"]["NAME"])
 
 
-def _nivel_aviso(dias: int | None) -> str | None:
-    if dias is None or dias > DIAS_URGENTE_COPIA_EXTERNA:
-        return "urgente"
-    if dias > DIAS_AVISO_COPIA_EXTERNA:
-        return "aviso"
-    return None
-
-
 @solo_directora
 def respaldos_tabla(request):
     dias = dias_sin_copia_externa(datetime.now())
@@ -49,7 +41,7 @@ def respaldos_tabla(request):
         ruta_secundaria=configuracion.ruta_secundaria() or "",
         ultima_copia_externa=configuracion.ultima_copia_externa(),
         copia_pendiente=configuracion.obtener(configuracion.CLAVE_COPIA_PENDIENTE) == "si",
-        nivel_aviso=_nivel_aviso(dias),
+        nivel_aviso=nivel_aviso_copia_externa(dias),
         dias_sin_copia=dias,
     )
     return render(request, PLANTILLA, contexto)

@@ -144,6 +144,13 @@ UNFOLD = {
                 ],
             },
             {
+                "title": "Reportes",
+                "items": [
+                    {"title": "Listado por grado", "icon": "list_alt", "link": reverse_lazy("reporte_listado")},
+                    {"title": "Retirados y graduados", "icon": "history", "link": reverse_lazy("reporte_historico")},
+                ],
+            },
+            {
                 "title": "Sistema",
                 "items": [
                     {"title": "Respaldos", "icon": "backup", "link": reverse_lazy("respaldos_tabla")},
