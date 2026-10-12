@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
 from django.shortcuts import render
@@ -40,5 +41,6 @@ def inicio(request):
         alertas=alertas_del_sistema(ciclo, datetime.now()),
         ciclo=ciclo,
         es_directora=es_directora(request.user),
+        version=settings.VERSION,
     )
     return render(request, PLANTILLA, contexto)

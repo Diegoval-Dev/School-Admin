@@ -1,9 +1,10 @@
 from django.urls import path
 
-from colegio.views import asistencia, inicio, notas, pagos, reportes, respaldos
+from colegio.views import asistencia, inicio, notas, pagos, reportes, respaldos, sistema
 
 urlpatterns = [
     path("", inicio.inicio, name="inicio"),
+    path("sistema/cerrar/", sistema.cerrar_sistema, name="cerrar_sistema"),
     path("reportes/listado/", reportes.listado_estudiantes, name="reporte_listado"),
     path("reportes/historico/", reportes.estudiantes_historicos, name="reporte_historico"),
     path("reportes/ficha/<int:estudiante_id>/", reportes.ficha_estudiante, name="reporte_ficha"),

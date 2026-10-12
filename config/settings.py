@@ -111,6 +111,8 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 LOGIN_URL = "admin:login"
 LOGIN_REDIRECT_URL = "admin:index"
 
+VERSION = (get_resource_dir() / "version.txt").read_text(encoding="utf-8").strip()
+
 UNIDADES_POR_CICLO = 4
 NOTA_MIN = Decimal("0")
 NOTA_MAX = Decimal("100")

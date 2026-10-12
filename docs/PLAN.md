@@ -49,12 +49,12 @@ Marca cada check `[x]` al completarlo. Una fase = código + tests + commit. No a
 
 ## Fase 5 — Respaldos y seguridad  (docs/SEGURIDAD_Y_RESPALDOS.md)
 - [x] `services/respaldos.py`: respaldo con `sqlite3.Connection.backup()`, verificación con `integrity_check`, rotación, copia secundaria.
-- [ ] Respaldo automático al iniciar, al cerrar limpiamente y cada 2 h con la app abierta. Respaldo previo a toda migración.
-- [ ] Pantalla **Respaldos** (solo Directora): lista, "Respaldar ahora", "Descargar respaldo (.zip)", ruta secundaria (USB), aviso en la pantalla de inicio si el último respaldo externo tiene > 7 días.
-- [ ] **Restaurar:** script `restaurar_respaldo.py` / acceso directo "Restaurar respaldo" del instalador. Antes de restaurar, respalda el estado actual; confirma con doble aviso.
+- [x] Respaldo automático al iniciar, al cerrar limpiamente y cada 2 h con la app abierta. Respaldo previo a toda migración.
+- [x] Pantalla **Respaldos** (solo Directora): lista, "Respaldar ahora", "Descargar respaldo (.zip)", ruta secundaria (USB), aviso en la pantalla de inicio si el último respaldo externo tiene > 7 días.
+- [x] **Restaurar:** script `restaurar_respaldo.py` / acceso directo "Restaurar respaldo" del instalador. Antes de restaurar, respalda el estado actual; confirma con doble aviso.
 - [x] **Exportar todo a Excel** (un libro con una hoja por tabla principal) como respaldo legible por humanos.
-- [ ] Al arrancar: `integrity_check`; si falla, ofrecer restaurar el último respaldo bueno automáticamente.
-- [ ] Bloqueo de instancia única (si ya está corriendo, abrir el navegador en la instancia existente y salir).
+- [x] Al arrancar: `integrity_check`; si falla, ofrecer restaurar el último respaldo bueno automáticamente.
+- [x] Bloqueo de instancia única (si ya está corriendo, abrir el navegador en la instancia existente y salir).
 - **Tests (obligatorios):** respaldo produce archivo válido y restaurable; rotación conserva lo correcto y nunca borra los 5 más recientes; restaurar guarda copia previa; migración fallida → restaura; doble instancia bloqueada.
 
 ## Fase 6 — Reportes, pulido y manual
@@ -65,13 +65,13 @@ Marca cada check `[x]` al completarlo. Una fase = código + tests + commit. No a
 - [ ] Opcional (solo si sobra tiempo): tarifas por grado para autocompletar el monto del pago.
 
 ## Fase 7 — Empaquetado e instalador  (docs/EMPAQUETADO.md)
-- [ ] `launcher.py` final: rutas congeladas, respaldo+migración, waitress en 127.0.0.1, puerto libre automático (8000→8010), abre navegador, instancia única, ícono de bandeja o ventana mínima con botón "Cerrar sistema" (elegir lo más simple).
-- [ ] `colegio.spec` de PyInstaller `--onedir`, incluyendo templates, static, `unfold`, `simple_history`, escudo y migraciones (`collect_all`/`collect_data_files`).
+- [x] `launcher.py` final: rutas congeladas, respaldo+migración, waitress en 127.0.0.1, puerto libre automático (8000→8010), abre navegador, instancia única, ícono de bandeja o ventana mínima con botón "Cerrar sistema" (elegir lo más simple).
+- [x] `colegio.spec` de PyInstaller `--onedir`, incluyendo templates, static, `unfold`, `simple_history`, escudo y migraciones (`collect_all`/`collect_data_files`).
 - [ ] `installer/colegio.iss` (Inno Setup): instala en `C:\ColegioJGC\app`, crea `C:\ColegioJGC\datos` y `respaldos` **solo si no existen**, acceso directo en escritorio, el desinstalador **jamás** borra `datos`/`respaldos`, ícono con el escudo.
 - [ ] `build.bat`: venv limpio → `pip install` → `pytest` → `pyinstaller` → `iscc` → `dist\Setup_ColegioJGC.exe`.
 - [ ] **Pruebas en PC limpia sin Python** (VM o máquina real): instalar, primer arranque, crear cuenta, cargar datos, cerrar, reabrir, actualizar a una versión nueva (datos intactos), desinstalar/reinstalar (datos intactos), matar el proceso a mitad de guardado (sin corrupción), antivirus/SmartScreen (documentar cómo aprobar el instalador).
 - [ ] Verificar que `.github/workflows/build-windows.yml` funcione: el workflow debe terminar en verde y dejar `Setup_ColegioJGC_*.exe` como artefacto descargable (`build.bat` no interactivo).
-- [ ] Versión visible en pie de página y en el nombre del instalador (`version.txt`).
+- [x] Versión visible en pie de página y en el nombre del instalador (`version.txt`).
 
 ---
 

@@ -12,3 +12,4 @@ dist/
 .env
 *.db
 *.db-journal
+assets/icono.ico

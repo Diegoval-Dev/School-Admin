@@ -157,9 +157,11 @@ def migrar_con_respaldo(db: Path, carpeta: Path, ejecutar_migracion) -> None:
         raise
 
 
-def respaldar_completo(db: Path, carpeta: Path, ahora: datetime | None = None) -> Path:
+def respaldar_completo(
+    db: Path, carpeta: Path, etiqueta: str = ETIQUETA_AUTOMATICA, ahora: datetime | None = None
+) -> Path:
     momento = ahora or datetime.now()
-    respaldo = respaldar(db, carpeta, ahora=momento)
+    respaldo = respaldar(db, carpeta, etiqueta=etiqueta, ahora=momento)
     _copiar_a_ruta_secundaria(respaldo, momento)
     rotar(carpeta, momento)
     return respaldo
