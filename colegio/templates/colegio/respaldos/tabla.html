@@ -1,0 +1,53 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Respaldos</h1>
+
+{% if nivel_aviso == "urgente" %}
+  <p class="aviso urgente">{% if dias_sin_copia is None %}Nunca se ha copiado el respaldo a una USB u otra carpeta.{% else %}Hace {{ dias_sin_copia }} días que no se copia el respaldo externo.{% endif %} Copia tu respaldo a la USB.</p>
+{% elif nivel_aviso == "aviso" %}
+  <p class="aviso">Hace {{ dias_sin_copia }} días que no se copia el respaldo externo. Conviene copiarlo a la USB.</p>
+{% endif %}
+{% if copia_pendiente %}
+  <p class="aviso">La última copia externa quedó pendiente: la USB o carpeta no estaba disponible.</p>
+{% endif %}
+
+<div class="tarjeta">
+  <form method="post" action="{% url 'respaldos_crear' %}">
+    {% csrf_token %}
+    <button type="submit">Respaldar ahora</button>
+  </form>
+  <p><a href="{% url 'respaldos_descargar' %}">Descargar respaldo (.zip)</a> · <a href="{% url 'respaldos_excel' %}">Exportar todo a Excel</a></p>
+</div>
+
+<div class="tarjeta">
+  <h2>Copia secundaria (USB u otra carpeta)</h2>
+  <form method="post" action="{% url 'respaldos_ruta' %}">
+    {% csrf_token %}
+    <input type="text" name="ruta" value="{{ ruta_secundaria }}" placeholder="Ejemplo: E:\Respaldos Colegio">
+    <button type="submit">Guardar ruta</button>
+  </form>
+  <p>Última copia externa: {{ ultima_copia_externa|default:"nunca" }}</p>
+</div>
+
+<div class="tarjeta">
+  <h2>Respaldos guardados</h2>
+  <table>
+    <thead><tr><th>Fecha</th><th>Tipo</th><th>Archivo</th></tr></thead>
+    <tbody>
+      {% for respaldo in respaldos %}
+        <tr><td>{{ respaldo.fecha|date:"d/m/Y H:i" }}</td><td>{{ respaldo.etiqueta }}</td><td>{{ respaldo.ruta.name }}</td></tr>
+      {% empty %}
+        <tr><td colspan="3">Todavía no hay respaldos.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<style>
+  .tarjeta { background: #fff; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .tarjeta input[type=text] { width: 60%; padding: 8px; }
+  .aviso { background: #fef3c7; padding: 10px; border-radius: 8px; }
+  .aviso.urgente { background: #fee2e2; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 6px; border-bottom: 1px solid #e2e8f0; }
+</style>
+{% endblock %}
