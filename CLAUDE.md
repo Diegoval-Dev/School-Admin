@@ -87,7 +87,7 @@ colegio-sistema/
   que resuelve distinto en desarrollo vs. ejecutable congelado (`sys.frozen` / `sys._MEIPASS`).
 - Vistas simples basadas en funciones. Sin DRF, sin APIs. Sin Celery. Sin Docker.
 - Cada función de servicio importante lleva test. Mínimo obligatorio de tests en `docs/PLAN.md`.
-- Commits pequeños, mensajes en español imperativo ("Agrega modelo de Pago").
+- Commits pequeños, mensajes en inglés imperativo ("Add Pago model").
 
 ## 7. Reportes imprimibles
 
