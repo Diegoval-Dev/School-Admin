@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Estado de cuenta: {{ matricula.estudiante }}</h1>
+<p>{{ matricula.ciclo }} · {{ matricula.get_grado_display }} · {{ matricula.get_jornada_display }}</p>
+<table>
+  <thead><tr><th>Concepto</th><th>Monto</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+    {% for pago in pagos %}
+      <tr>
+        <td>{{ pago.get_concepto_display }}</td>
+        <td>Q{{ pago.monto }}</td>
+        <td>{{ pago.fecha_pago|date:"d/m/Y" }}</td>
+        <td>{% if pago.anulado %}Anulado: {{ pago.motivo_anulacion }}{% else %}Pagado{% endif %}</td>
+        <td>{% if not pago.anulado %}<a href="{% url 'pago_anular' pago.pk %}">Anular</a>{% endif %}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5">Sin pagos registrados.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p><strong>Total pagado (sin anulados): Q{{ total }}</strong></p>
+<p><a href="{% url 'pagos_tabla' %}?ciclo={{ matricula.ciclo_id }}&grado={{ matricula.grado }}&jornada={{ matricula.jornada }}">Volver a Pagos</a></p>
+{% endblock %}

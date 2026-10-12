@@ -1,0 +1,30 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Pendientes de pago</h1>
+<form method="get">
+  <label>Ciclo
+    <select name="ciclo">
+      {% for opcion in ciclos %}
+        <option value="{{ opcion.pk }}" {% if ciclo and opcion.pk == ciclo.pk %}selected{% endif %}>{{ opcion.anio }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Mes
+    <select name="concepto">
+      {% for valor, texto in conceptos %}
+        <option value="{{ valor }}" {% if valor == concepto %}selected{% endif %}>{{ texto }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Mostrar</button>
+</form>
+{% if ciclo %}
+  <p>{{ matriculas|length }} estudiante(s) sin pago de {{ concepto.label }}.</p>
+  <ul>
+    {% for matricula in matriculas %}
+      <li>{{ matricula.estudiante }} · {{ matricula.get_grado_display }} · {{ matricula.get_jornada_display }}
+        — <a href="{% url 'pago_registrar' matricula.pk concepto %}">Registrar</a></li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}

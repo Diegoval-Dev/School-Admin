@@ -1,0 +1,51 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Pagos</h1>
+{% include "colegio/pagos/_filtros.html" %}
+{% if not ciclo %}
+  <p>No hay ciclo escolar. Crea uno en <a href="{% url 'admin:colegio_cicloescolar_add' %}">Ciclos escolares</a>.</p>
+{% else %}
+  <p class="acciones">
+    <a href="{% url 'pagos_reporte' %}?ciclo={{ ciclo.pk }}&grado={{ grado }}&jornada={{ jornada }}" target="_blank">Imprimir</a>
+    <a href="{% url 'pagos_excel' %}?ciclo={{ ciclo.pk }}&grado={{ grado }}&jornada={{ jornada }}">Exportar a Excel</a>
+    <a href="{% url 'pagos_pendientes' %}?ciclo={{ ciclo.pk }}">Pendientes del mes</a>
+  </p>
+  <div class="tabla-pagos">
+    <table>
+      <thead>
+        <tr>
+          <th>No.</th><th>Apellidos</th><th>Nombres</th>
+          {% for valor, texto in conceptos %}<th>{{ texto }}</th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ fila.matricula.estudiante.apellidos }}</td>
+            <td><a href="{% url 'estado_cuenta' fila.matricula.pk %}">{{ fila.matricula.estudiante.nombres }}</a></td>
+            {% for concepto, pago in fila.celdas %}
+              {% if pago %}
+                <td class="pagado" title="Pagado el {{ pago.fecha_pago|date:'d/m/Y' }}">Q{{ pago.monto }}</td>
+              {% else %}
+                <td class="pendiente"><a href="{% url 'pago_registrar' fila.matricula.pk concepto %}">+ Pagar</a></td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% empty %}
+          <tr><td colspan="{{ conceptos|length|add:3 }}">No hay estudiantes activos en este grado y jornada.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+<style>
+  .tabla-pagos { overflow-x: auto; }
+  .tabla-pagos table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+  .tabla-pagos th, .tabla-pagos td { border: 1px solid #cbd2d9; padding: 6px 8px; white-space: nowrap; }
+  .pagado { background: #d1fae5; color: #065f46; font-weight: 600; }
+  .pendiente { background: #f1f5f9; color: #64748b; }
+  .acciones a { margin-right: 16px; font-weight: 600; }
+  .filtros label { margin-right: 12px; }
+</style>
+{% endblock %}

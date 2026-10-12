@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Anular pago</h1>
+<p>El pago de <strong>{{ pago.get_concepto_display }}</strong> por Q{{ pago.monto }} no se borra: queda en el historial como anulado.</p>
+<form method="post" novalidate>
+  {% csrf_token %}
+  {{ formulario.non_field_errors }}
+  {% for campo in formulario %}
+    <p>
+      <label for="{{ campo.id_for_label }}">{{ campo.label }}</label><br>
+      {{ campo }}
+      {{ campo.errors }}
+    </p>
+  {% endfor %}
+  <button type="submit">Anular pago</button>
+  <a href="{% url 'estado_cuenta' pago.matricula_id %}">Volver</a>
+</form>
+{% endblock %}

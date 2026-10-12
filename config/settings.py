@@ -3,6 +3,8 @@ import secrets
 from decimal import Decimal
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 from config.paths import get_data_dir, get_resource_dir
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,4 +121,16 @@ UNFOLD = {
     "SITE_HEADER": "Colegio Julio González Celis",
     "SITE_LOGO": "colegio/escudo_colegio.png",
     "SITE_SYMBOL": "school",
+    "SIDEBAR": {
+        "show_search": True,
+        "navigation": [
+            {
+                "title": "Pagos",
+                "items": [
+                    {"title": "Pagos por grado", "icon": "payments", "link": reverse_lazy("pagos_tabla")},
+                    {"title": "Pendientes del mes", "icon": "schedule", "link": reverse_lazy("pagos_pendientes")},
+                ],
+            },
+        ],
+    },
 }

@@ -27,11 +27,11 @@ Marca cada check `[x]` al completarlo. Una fase = código + tests + commit. No a
 - **Tests:** edad; unicidad de matrícula por ciclo; código autogenerado sin colisiones; `PROTECT` impide borrar estudiante con pagos; Secretaria no puede borrar.
 
 ## Fase 2 — Pagos (mensualidades)
-- [ ] Modelo `Pago` (una fila por concepto: Inscripción, Enero…Octubre). Un solo pago **no anulado** por matrícula+concepto.
-- [ ] Pantalla **Pagos**: elegir ciclo, grado y jornada → tabla estudiantes × (Inscripción, Ene…Oct). Celda verde = pagado (muestra monto/fecha), vacía/gris = pendiente. Clic en celda → registrar pago (monto, fecha, no. de recibo opcional).
-- [ ] **Anular** pago con motivo obligatorio (no se borra). Anulados no cuentan como pagados pero quedan en el historial.
-- [ ] Estado de cuenta por estudiante (todos sus pagos del ciclo, total pagado) y listado de **pendientes del mes**.
-- [ ] Reporte imprimible "Pagos" (formato en `docs/CAMPOS_ORIGINALES.md`) + exportar a Excel.
+- [x] Modelo `Pago` (una fila por concepto: Inscripción, Enero…Octubre). Un solo pago **no anulado** por matrícula+concepto.
+- [x] Pantalla **Pagos**: elegir ciclo, grado y jornada → tabla estudiantes × (Inscripción, Ene…Oct). Celda verde = pagado (muestra monto/fecha), vacía/gris = pendiente. Clic en celda → registrar pago (monto, fecha, no. de recibo opcional).
+- [x] **Anular** pago con motivo obligatorio (no se borra). Anulados no cuentan como pagados pero quedan en el historial.
+- [x] Estado de cuenta por estudiante (todos sus pagos del ciclo, total pagado) y listado de **pendientes del mes**.
+- [x] Reporte imprimible "Pagos" (formato en `docs/CAMPOS_ORIGINALES.md`) + exportar a Excel.
 - **Tests:** no duplicar pago activo; anular permite volver a registrar; totales correctos con Decimal.
 
 ## Fase 3 — Asistencia
