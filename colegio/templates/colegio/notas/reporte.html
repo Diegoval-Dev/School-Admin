@@ -1,0 +1,54 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Calificaciones</title>
+  <style>
+    @page { size: letter; margin: 1.5cm; }
+    body { font-family: Arial, sans-serif; font-size: 10pt; color: #000; }
+    .encabezado { display: flex; align-items: center; gap: 12px; border-bottom: 2px solid #000; padding-bottom: 6px; }
+    .encabezado img { width: 64px; }
+    .encabezado h1 { font-size: 13pt; margin: 0; }
+    .encabezado p { margin: 4px 0 0; }
+    h2 { text-align: center; font-size: 12pt; margin: 12px 0 6px; }
+    .datos { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #000; padding: 3px 4px; text-align: left; }
+    td.num { text-align: right; }
+    .firma { margin-top: 40px; }
+    .acciones { margin: 12px 0; }
+    @media print { .acciones { display: none; } }
+  </style>
+</head>
+<body>
+  {% include "colegio/reportes/_encabezado.html" with jornada_texto=jornada_texto grado_texto=grado_texto %}
+  <h2>Calificaciones</h2>
+  <div class="datos">
+    <span>Docente: {{ docente.nombre_completo|default:"________________" }}</span>
+    <span>Materia: {{ materia.nombre }}</span>
+    <span>Fecha: {{ fecha|date:"d/m/Y" }}</span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>No.</th><th>Apellidos</th><th>Nombres</th>
+        {% for unidad in unidades %}<th>U{{ unidad }}</th>{% endfor %}
+        <th>TOTAL</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in filas %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ fila.matricula.estudiante.apellidos }}</td>
+          <td>{{ fila.matricula.estudiante.nombres }}</td>
+          {% for unidad, punteo in fila.unidades %}<td class="num">{{ punteo|default_if_none:"" }}</td>{% endfor %}
+          <td class="num">{{ fila.total|default_if_none:"" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="firma">FIRMA: __________________________</p>
+  <p class="acciones"><button onclick="window.print()">Imprimir</button></p>
+</body>
+</html>

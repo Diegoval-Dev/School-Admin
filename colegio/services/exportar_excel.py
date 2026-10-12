@@ -53,3 +53,17 @@ def _valores_de_asistencia(numero: int, fila: dict) -> list:
     estados = [estado or "" for _, estado, _ in fila["celdas"]]
     totales = [fila["presentes"], fila["ausentes"], fila["excusas"]]
     return [numero, estudiante.apellidos, estudiante.nombres, *estados, *totales]
+
+
+def libro_calificaciones(filas: list[dict], unidades: int) -> bytes:
+    encabezados = ENCABEZADOS_PERSONA + [f"Unidad {unidad}" for unidad in range(1, unidades + 1)] + ["TOTAL", "PROMEDIO"]
+    libro, hoja = _hoja_con_encabezados("Calificaciones", encabezados)
+    for numero, fila in enumerate(filas, start=1):
+        hoja.append(_valores_de_calificaciones(numero, fila))
+    return _libro_a_bytes(libro)
+
+
+def _valores_de_calificaciones(numero: int, fila: dict) -> list:
+    estudiante = fila["matricula"].estudiante
+    punteos = [punteo for _, punteo in fila["unidades"]]
+    return [numero, estudiante.apellidos, estudiante.nombres, *punteos, fila["total"], fila["promedio"]]

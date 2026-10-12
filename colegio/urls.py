@@ -1,8 +1,12 @@
 from django.urls import path
 
-from colegio.views import asistencia, pagos
+from colegio.views import asistencia, notas, pagos
 
 urlpatterns = [
+    path("notas/", notas.notas_tabla, name="notas_tabla"),
+    path("notas/guardar/", notas.notas_guardar, name="notas_guardar"),
+    path("notas/reporte/", notas.notas_reporte, name="notas_reporte"),
+    path("notas/excel/", notas.notas_excel, name="notas_excel"),
     path("asistencia/", asistencia.asistencia_tabla, name="asistencia_tabla"),
     path("asistencia/ciclar/", asistencia.asistencia_ciclar, name="asistencia_ciclar"),
     path("asistencia/reporte/", asistencia.asistencia_reporte, name="asistencia_reporte"),

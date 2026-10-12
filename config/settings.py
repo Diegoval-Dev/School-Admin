@@ -137,6 +137,12 @@ UNFOLD = {
                     {"title": "Pasar lista", "icon": "checklist", "link": reverse_lazy("asistencia_tabla")},
                 ],
             },
+            {
+                "title": "Notas",
+                "items": [
+                    {"title": "Calificaciones", "icon": "edit_note", "link": reverse_lazy("notas_tabla")},
+                ],
+            },
         ],
     },
 }

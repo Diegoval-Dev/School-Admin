@@ -42,9 +42,9 @@ Marca cada check `[x]` al completarlo. Una fase = código + tests + commit. No a
 - **Tests:** una asistencia por matrícula+fecha; cambio de estado; solo matrículas activas aparecen.
 
 ## Fase 4 — Notas
-- [ ] Pantalla **Notas**: elegir ciclo, grado, materia y docente → tabla estudiantes × unidades (1–4) + TOTAL/PROMEDIO. Validar rango `NOTA_MIN..NOTA_MAX`. Notas bajo `NOTA_APROBACION` en rojo.
-- [ ] Navegación con Tab/Enter entre celdas para captura rápida; guardar con botón claro.
-- [ ] Reporte imprimible "Calificaciones" (con docente, materia y fecha) + Excel.
+- [x] Pantalla **Notas**: elegir ciclo, grado, materia y docente → tabla estudiantes × unidades (1–4) + TOTAL/PROMEDIO. Validar rango `NOTA_MIN..NOTA_MAX`. Notas bajo `NOTA_APROBACION` en rojo.
+- [x] Navegación con Tab/Enter entre celdas para captura rápida; guardar con botón claro.
+- [x] Reporte imprimible "Calificaciones" (con docente, materia y fecha) + Excel.
 - **Tests:** unicidad (matrícula, materia, unidad); rango válido; promedio correcto.
 
 ## Fase 5 — Respaldos y seguridad  (docs/SEGURIDAD_Y_RESPALDOS.md)

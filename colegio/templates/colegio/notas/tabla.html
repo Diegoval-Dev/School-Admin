@@ -1,0 +1,99 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Notas</h1>
+<form method="get" class="filtros">
+  <label>Ciclo
+    <select name="ciclo">
+      {% for opcion in ciclos %}<option value="{{ opcion.pk }}" {% if ciclo and opcion.pk == ciclo.pk %}selected{% endif %}>{{ opcion.anio }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Grado
+    <select name="grado">
+      {% for valor, texto in grados %}<option value="{{ valor }}" {% if valor == grado %}selected{% endif %}>{{ texto }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Materia
+    <select name="materia">
+      {% for materia_opcion in materias %}<option value="{{ materia_opcion.pk }}" {% if materia and materia_opcion.pk == materia.pk %}selected{% endif %}>{{ materia_opcion.nombre }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Docente
+    <select name="docente">
+      <option value="">—</option>
+      {% for docente_opcion in docentes %}<option value="{{ docente_opcion.pk }}" {% if docente and docente_opcion.pk == docente.pk %}selected{% endif %}>{{ docente_opcion.nombre_completo }}</option>{% endfor %}
+    </select>
+  </label>
+  <button type="submit">Mostrar</button>
+</form>
+
+{% if not ciclo %}
+  <p>No hay ciclo escolar. Crea uno en <a href="{% url 'admin:colegio_cicloescolar_add' %}">Ciclos escolares</a>.</p>
+{% elif not materia %}
+  <p>No hay materias para este grado. Crea una en <a href="{% url 'admin:colegio_materia_add' %}">Materias</a>.</p>
+{% else %}
+  <p class="leyenda">Escribe el punteo ({{ nota_min }} a {{ nota_max }}) y presiona Enter para bajar a la siguiente fila. En rojo, lo menor a {{ nota_aprobacion }}.</p>
+  <p class="acciones">
+    <a href="{% url 'notas_reporte' %}?{{ query }}" target="_blank">Imprimir</a>
+    <a href="{% url 'notas_excel' %}?{{ query }}">Exportar a Excel</a>
+  </p>
+  <form method="post" action="{% url 'notas_guardar' %}?{{ query }}" id="form-notas">
+    {% csrf_token %}
+    <div class="tabla-notas">
+      <table>
+        <thead>
+          <tr>
+            <th>No.</th><th>Apellidos</th><th>Nombres</th>
+            {% for unidad in unidades %}<th>Unidad {{ unidad }}</th>{% endfor %}
+            <th>TOTAL</th><th>PROMEDIO</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for fila in filas %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ fila.matricula.estudiante.apellidos }}</td>
+              <td>{{ fila.matricula.estudiante.nombres }}</td>
+              {% for unidad, punteo in fila.unidades %}
+                <td>
+                  <input type="number" step="0.01" min="{{ nota_min }}" max="{{ nota_max }}"
+                         name="punteo_{{ fila.matricula.pk }}_{{ unidad }}"
+                         value="{{ punteo|default_if_none:'' }}"
+                         class="{% if punteo is not None and punteo < nota_aprobacion %}reprobado{% endif %}">
+                </td>
+              {% endfor %}
+              <td>{{ fila.total|default_if_none:"" }}</td>
+              <td>{{ fila.promedio|default_if_none:"" }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="{{ unidades|length|add:5 }}">No hay estudiantes activos en este grado.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p><button type="submit">Guardar notas</button></p>
+  </form>
+{% endif %}
+<style>
+  .tabla-notas { overflow-x: auto; }
+  .tabla-notas table { border-collapse: collapse; font-size: .9rem; }
+  .tabla-notas th, .tabla-notas td { border: 1px solid #cbd2d9; padding: 4px 6px; white-space: nowrap; }
+  .tabla-notas input { width: 84px; padding: 6px; font-size: 1rem; }
+  .tabla-notas input.reprobado { color: #b42318; font-weight: 700; border-color: #b42318; }
+  .acciones a { margin-right: 16px; font-weight: 600; }
+  .filtros label { margin-right: 12px; }
+  .leyenda { color: #52606d; }
+</style>
+<script>
+  (function () {
+    var form = document.getElementById("form-notas");
+    if (!form) return;
+    form.addEventListener("keydown", function (evento) {
+      if (evento.key !== "Enter" || evento.target.tagName !== "INPUT") return;
+      evento.preventDefault();
+      var celdas = Array.prototype.slice.call(form.querySelectorAll("input[type=number]"));
+      var siguiente = celdas[celdas.indexOf(evento.target) + 1];
+      if (siguiente) siguiente.focus();
+    });
+  })();
+</script>
+{% endblock %}
