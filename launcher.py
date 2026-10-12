@@ -111,20 +111,26 @@ def _recuperar_ultimo_respaldo_bueno(db: Path, backup_dir: Path) -> bool:
 
 
 def _preparar_base(db: Path, backup_dir: Path) -> None:
-    from django.core.management import call_command
-
     from colegio.services.migraciones import hay_migraciones_pendientes
     from colegio.services.respaldos import migrar_con_respaldo, respaldar_completo
 
-    if db.exists():
-        respaldar_completo(db, backup_dir)
+    if not db.exists():
+        _ejecutar_migraciones()
+        return
+    respaldar_completo(db, backup_dir)
     if not hay_migraciones_pendientes():
         return
     try:
-        migrar_con_respaldo(db, backup_dir, lambda: call_command("migrate", interactive=False, verbosity=0))
+        migrar_con_respaldo(db, backup_dir, _ejecutar_migraciones)
     except Exception:
         _mensaje(MENSAJE_MIGRACION_FALLIDA)
         raise
+
+
+def _ejecutar_migraciones() -> None:
+    from django.core.management import call_command
+
+    call_command("migrate", interactive=False, verbosity=0)
 
 
 def _iniciar_respaldo_periodico(db: Path, backup_dir: Path) -> None:
