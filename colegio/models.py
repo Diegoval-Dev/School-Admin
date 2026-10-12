@@ -74,6 +74,7 @@ class EstadoAsistencia(models.TextChoices):
     PRESENTE = "P", "Presente"
     AUSENTE = "A", "Ausente"
     EXCUSA = "E", "Excusa"
+    SIN_REGISTRO = "S", "Sin registro"
 
 
 def normalizar_documento(tipo: str, numero: str) -> str:
@@ -360,6 +361,7 @@ class Asistencia(Auditable):
     matricula = models.ForeignKey(Matricula, on_delete=models.PROTECT, related_name="asistencias")
     fecha = models.DateField()
     estado = models.CharField(max_length=1, choices=EstadoAsistencia.choices)
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name_plural = "asistencias"

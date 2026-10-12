@@ -9,8 +9,10 @@ DIAS_FIN_DE_SEMANA = (5, 6)
 SIGUIENTE_ESTADO = {
     EstadoAsistencia.PRESENTE: EstadoAsistencia.AUSENTE,
     EstadoAsistencia.AUSENTE: EstadoAsistencia.EXCUSA,
-    EstadoAsistencia.EXCUSA: EstadoAsistencia.PRESENTE,
+    EstadoAsistencia.EXCUSA: EstadoAsistencia.SIN_REGISTRO,
+    EstadoAsistencia.SIN_REGISTRO: EstadoAsistencia.PRESENTE,
 }
+ESTADOS_CONTABLES = (EstadoAsistencia.PRESENTE, EstadoAsistencia.AUSENTE, EstadoAsistencia.EXCUSA)
 MENSAJE_MATRICULA_INACTIVA = "Solo se puede pasar lista a estudiantes con matrícula activa."
 
 
@@ -48,7 +50,7 @@ def filas_de_asistencia(matriculas, dias: list[date]) -> list[dict]:
 
 def _fila_de_asistencia(matricula: Matricula, dias: list[date], estados: dict) -> dict:
     celdas = [(dia, estados.get((matricula.pk, dia))) for dia in dias]
-    valores = [estado for _, estado in celdas if estado]
+    valores = [estado for _, estado in celdas if estado in ESTADOS_CONTABLES]
     return {
         "matricula": matricula,
         "celdas": celdas,

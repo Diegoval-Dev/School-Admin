@@ -1,8 +1,10 @@
 from datetime import date
+from io import BytesIO
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from openpyxl import load_workbook
 
 from colegio.models import Asistencia, CicloEscolar, EstadoAsistencia, Estudiante, Genero, Grado, Jornada, Matricula
 from colegio.services.asistencia import ciclar_asistencia, dias_del_mes, filas_de_asistencia
@@ -39,15 +41,40 @@ class CiclarAsistenciaTests(AsistenciaTestCase):
 
         self.assertEqual(Asistencia.objects.get().estado, EstadoAsistencia.PRESENTE)
 
-    def test_clics_cambian_el_estado_en_orden_sin_borrar(self):
+    def test_ciclo_completo_de_estados_sin_borrar_filas(self):
+        dia = date(2026, 1, 5)
+        estados_por_clic = []
+        for _ in range(6):
+            estados_por_clic.append(ciclar_asistencia(self.matricula, dia).estado)
+
+        self.assertEqual(
+            estados_por_clic,
+            [
+                EstadoAsistencia.PRESENTE,
+                EstadoAsistencia.AUSENTE,
+                EstadoAsistencia.EXCUSA,
+                EstadoAsistencia.SIN_REGISTRO,
+                EstadoAsistencia.PRESENTE,
+                EstadoAsistencia.AUSENTE,
+            ],
+        )
+        self.assertEqual(Asistencia.objects.filter(matricula=self.matricula, fecha=dia).count(), 1)
+
+    def test_sin_registro_se_guarda_como_fila(self):
+        dia = date(2026, 1, 5)
+        for _ in range(4):
+            ciclar_asistencia(self.matricula, dia)
+
+        self.assertTrue(Asistencia.objects.filter(estado=EstadoAsistencia.SIN_REGISTRO).exists())
+
+    def test_cada_cambio_queda_en_el_historial(self):
         dia = date(2026, 1, 5)
         ciclar_asistencia(self.matricula, dia)
         ciclar_asistencia(self.matricula, dia)
-        ciclar_asistencia(self.matricula, dia)
-        ciclar_asistencia(self.matricula, dia)
 
-        estados = list(Asistencia.objects.values_list("estado", flat=True))
-        self.assertEqual(estados, [EstadoAsistencia.PRESENTE])
+        asistencia = Asistencia.objects.get()
+        self.assertEqual(asistencia.history.count(), 2)
+        self.assertEqual(asistencia.history.order_by("history_id").first().estado, EstadoAsistencia.PRESENTE)
 
     def test_una_asistencia_por_matricula_y_dia(self):
         dia = date(2026, 1, 5)
@@ -70,6 +97,33 @@ class CiclarAsistenciaTests(AsistenciaTestCase):
         filas = filas_de_asistencia(activas, dias_del_mes(2026, 1, Jornada.DIARIO))
 
         self.assertEqual([fila["matricula"] for fila in filas], [self.matricula])
+
+
+class SinRegistroTests(AsistenciaTestCase):
+    def test_sin_registro_no_cuenta_en_totales(self):
+        ciclar_asistencia(self.matricula, date(2026, 1, 5))
+        for _ in range(2):
+            ciclar_asistencia(self.matricula, date(2026, 1, 6))
+        for _ in range(4):
+            ciclar_asistencia(self.matricula, date(2026, 1, 7))
+
+        fila = filas_de_asistencia(
+            Matricula.objects.filter(pk=self.matricula.pk), dias_del_mes(2026, 1, Jornada.DIARIO)
+        )[0]
+
+        self.assertEqual((fila["presentes"], fila["ausentes"], fila["excusas"]), (1, 1, 0))
+
+    def test_sin_registro_se_ve_en_blanco_en_reporte_y_excel(self):
+        for _ in range(4):
+            ciclar_asistencia(self.matricula, date(2026, 1, 5))
+
+        reporte = self.client.get("/asistencia/reporte/", {"ciclo": self.ciclo.pk, "mes": 1})
+        excel = self.client.get("/asistencia/excel/", {"ciclo": self.ciclo.pk, "mes": 1})
+
+        hoja = load_workbook(BytesIO(excel.content)).active
+        dia_cinco = hoja.cell(row=2, column=3 + 5).value
+        self.assertEqual(reporte.status_code, 200)
+        self.assertIsNone(dia_cinco)
 
 
 class TotalesAsistenciaTests(AsistenciaTestCase):

@@ -3,7 +3,7 @@ from io import BytesIO
 from openpyxl import Workbook
 from openpyxl.styles import Font
 
-from colegio.models import Concepto
+from colegio.models import Concepto, EstadoAsistencia
 
 FILA_ENCABEZADO = 1
 FUENTE_ENCABEZADO = Font(bold=True)
@@ -48,9 +48,15 @@ def libro_asistencia(filas: list[dict], dias: list) -> bytes:
     return _libro_a_bytes(libro)
 
 
+def _estado_para_excel(estado: str | None) -> str:
+    if estado is None or estado == EstadoAsistencia.SIN_REGISTRO:
+        return ""
+    return estado
+
+
 def _valores_de_asistencia(numero: int, fila: dict) -> list:
     estudiante = fila["matricula"].estudiante
-    estados = [estado or "" for _, estado, _ in fila["celdas"]]
+    estados = [_estado_para_excel(estado) for _, estado, _ in fila["celdas"]]
     totales = [fila["presentes"], fila["ausentes"], fila["excusas"]]
     return [numero, estudiante.apellidos, estudiante.nombres, *estados, *totales]
 
