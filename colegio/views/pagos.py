@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.exceptions import ValidationError
 from django.http import Http404, HttpResponse
@@ -8,6 +7,7 @@ from django.urls import reverse
 from colegio.forms import AnulacionPagoForm, PagoForm
 from colegio.models import CicloEscolar, Concepto, Grado, Jornada, Matricula, Pago
 from colegio.services.exportar_excel import libro_pagos
+from colegio.views.filtros import ciclo_desde, contexto_admin, filtros_de_grado
 from colegio.services.pagos import (
     anular_pago,
     filas_de_pagos,
@@ -25,34 +25,15 @@ PLANTILLA_REPORTE = "colegio/pagos/reporte.html"
 TIPO_EXCEL = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
 
-def _ciclo_desde(request):
-    pk = request.GET.get("ciclo")
-    if pk:
-        return CicloEscolar.objects.filter(pk=pk).first()
-    return CicloEscolar.objects.filter(activo=True).first()
-
-
-def _filtros(request) -> dict:
-    return {
-        "ciclo": _ciclo_desde(request),
-        "grado": request.GET.get("grado", Grado.PRIMERO),
-        "jornada": request.GET.get("jornada", Jornada.DIARIO),
-    }
-
-
-def _contexto_base(request, **extra) -> dict:
-    return {**admin.site.each_context(request), **extra}
-
-
 def _filtros_con_filas(request) -> dict:
-    filtros = _filtros(request)
+    filtros = filtros_de_grado(request)
     filas = filas_de_pagos(filtros["ciclo"], filtros["grado"], filtros["jornada"]) if filtros["ciclo"] else []
     return {**filtros, "filas": filas}
 
 
 @staff_member_required
 def pagos_tabla(request):
-    contexto = _contexto_base(
+    contexto = contexto_admin(
         request,
         **_filtros_con_filas(request),
         grados=Grado.choices,
@@ -96,7 +77,7 @@ def pago_registrar(request, matricula_id: int, concepto: str):
             formulario.add_error(None, error)
         else:
             return redirect(_url_tabla(matricula))
-    contexto = _contexto_base(
+    contexto = contexto_admin(
         request, matricula=matricula, concepto=Concepto(concepto), formulario=formulario
     )
     return render(request, PLANTILLA_REGISTRAR, contexto)
@@ -113,14 +94,14 @@ def pago_anular(request, pago_id: int):
             formulario.add_error(None, error)
         else:
             return redirect("estado_cuenta", matricula_id=pago.matricula_id)
-    contexto = _contexto_base(request, pago=pago, formulario=formulario)
+    contexto = contexto_admin(request, pago=pago, formulario=formulario)
     return render(request, PLANTILLA_ANULAR, contexto)
 
 
 @staff_member_required
 def estado_cuenta(request, matricula_id: int):
     matricula = get_object_or_404(Matricula.objects.select_related("estudiante", "ciclo"), pk=matricula_id)
-    contexto = _contexto_base(
+    contexto = contexto_admin(
         request,
         matricula=matricula,
         pagos=matricula.pagos.all(),
@@ -131,10 +112,10 @@ def estado_cuenta(request, matricula_id: int):
 
 @staff_member_required
 def pagos_pendientes(request):
-    ciclo = _ciclo_desde(request)
+    ciclo = ciclo_desde(request)
     concepto = request.GET.get("concepto", Concepto.ENERO)
     matriculas = matriculas_pendientes(ciclo, concepto) if ciclo else []
-    contexto = _contexto_base(
+    contexto = contexto_admin(
         request,
         ciclo=ciclo,
         concepto=Concepto(concepto),

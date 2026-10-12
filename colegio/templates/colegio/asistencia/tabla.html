@@ -1,0 +1,81 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Asistencia</h1>
+<form method="get" class="filtros">
+  <label>Ciclo
+    <select name="ciclo">
+      {% for opcion in ciclos %}
+        <option value="{{ opcion.pk }}" {% if ciclo and opcion.pk == ciclo.pk %}selected{% endif %}>{{ opcion.anio }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Grado
+    <select name="grado">
+      {% for valor, texto in grados %}<option value="{{ valor }}" {% if valor == grado %}selected{% endif %}>{{ texto }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Jornada
+    <select name="jornada">
+      {% for valor, texto in jornadas %}<option value="{{ valor }}" {% if valor == jornada %}selected{% endif %}>{{ texto }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Mes
+    <select name="mes">
+      {% for valor, texto in meses %}<option value="{{ valor }}" {% if valor == mes %}selected{% endif %}>{{ texto }}</option>{% endfor %}
+    </select>
+  </label>
+  <button type="submit">Mostrar</button>
+</form>
+{% if not ciclo %}
+  <p>No hay ciclo escolar. Crea uno en <a href="{% url 'admin:colegio_cicloescolar_add' %}">Ciclos escolares</a>.</p>
+{% else %}
+  <p class="leyenda">Clic en una celda para cambiar: ✓ presente → ✗ ausente → E excusa → ✓. Los fines de semana van sombreados.</p>
+  <p class="acciones">
+    <a href="{% url 'asistencia_reporte' %}?ciclo={{ ciclo.pk }}&grado={{ grado }}&jornada={{ jornada }}&mes={{ mes }}" target="_blank">Imprimir</a>
+    <a href="{% url 'asistencia_excel' %}?ciclo={{ ciclo.pk }}&grado={{ grado }}&jornada={{ jornada }}&mes={{ mes }}">Exportar a Excel</a>
+  </p>
+  <form method="post" action="{% url 'asistencia_ciclar' %}" class="tabla-asistencia">
+    {% csrf_token %}
+    <table>
+      <thead>
+        <tr>
+          <th>No.</th><th>Apellidos</th><th>Nombres</th>
+          {% for dia in dias %}
+            <th class="{% if dia.fin_de_semana %}finde{% endif %}">{{ dia.fecha|date:"j" }}<br><small>{{ dia.fecha|date:"D" }}</small></th>
+          {% endfor %}
+          <th>P</th><th>A</th><th>E</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ fila.matricula.estudiante.apellidos }}</td>
+            <td>{{ fila.matricula.estudiante.nombres }}</td>
+            {% for fecha, estado, simbolo in fila.celdas %}
+              <td class="{% if fecha.weekday >= 5 %}finde{% endif %} {% if estado %}estado-{{ estado }}{% endif %}">
+                <button type="submit" name="celda" value="{{ fila.matricula.pk }}|{{ fecha|date:'Y-m-d' }}">{{ simbolo }}</button>
+              </td>
+            {% endfor %}
+            <td>{{ fila.presentes }}</td><td>{{ fila.ausentes }}</td><td>{{ fila.excusas }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="{{ dias|length|add:6 }}">No hay estudiantes activos en este grado y jornada.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
+{% endif %}
+<style>
+  .tabla-asistencia { overflow-x: auto; }
+  .tabla-asistencia table { border-collapse: collapse; font-size: .85rem; }
+  .tabla-asistencia th, .tabla-asistencia td { border: 1px solid #cbd2d9; padding: 2px 4px; text-align: center; white-space: nowrap; }
+  .tabla-asistencia td button { background: none; border: 0; width: 100%; padding: 6px 4px; cursor: pointer; font-size: 1rem; }
+  .finde { background: #eef2f7; }
+  .estado-P { background: #d1fae5; }
+  .estado-A { background: #fee2e2; }
+  .estado-E { background: #fef3c7; }
+  .acciones a { margin-right: 16px; font-weight: 600; }
+  .filtros label { margin-right: 12px; }
+</style>
+{% endblock %}

@@ -35,10 +35,10 @@ Marca cada check `[x]` al completarlo. Una fase = código + tests + commit. No a
 - **Tests:** no duplicar pago activo; anular permite volver a registrar; totales correctos con Decimal.
 
 ## Fase 3 — Asistencia
-- [ ] Pantalla **Asistencia**: elegir ciclo, grado, jornada y mes → cuadrícula estudiantes × días (1–31, solo días del mes). Clic cicla entre: vacío → Presente (✓) → Ausente (✗) → Excusa (E). Guardado automático por celda o botón "Guardar" grande (elegir lo más simple y fiable).
-- [ ] Solo estudiantes con matrícula activa en ese ciclo/grado/jornada. Fines de semana resaltados; en jornada "Fin de semana" mostrar solo sábados/domingos.
-- [ ] Totales por estudiante (presentes, ausentes, excusas) al final de la fila.
-- [ ] Reporte imprimible (Carta horizontal) + Excel.
+- [x] Pantalla **Asistencia**: elegir ciclo, grado, jornada y mes → cuadrícula estudiantes × días (1–31, solo días del mes). Clic cicla entre: vacío → Presente (✓) → Ausente (✗) → Excusa (E). Guardado automático por celda o botón "Guardar" grande (elegir lo más simple y fiable).
+- [x] Solo estudiantes con matrícula activa en ese ciclo/grado/jornada. Fines de semana resaltados; en jornada "Fin de semana" mostrar solo sábados/domingos.
+- [x] Totales por estudiante (presentes, ausentes, excusas) al final de la fila.
+- [x] Reporte imprimible (Carta horizontal) + Excel.
 - **Tests:** una asistencia por matrícula+fecha; cambio de estado; solo matrículas activas aparecen.
 
 ## Fase 4 — Notas

@@ -131,6 +131,12 @@ UNFOLD = {
                     {"title": "Pendientes del mes", "icon": "schedule", "link": reverse_lazy("pagos_pendientes")},
                 ],
             },
+            {
+                "title": "Asistencia",
+                "items": [
+                    {"title": "Pasar lista", "icon": "checklist", "link": reverse_lazy("asistencia_tabla")},
+                ],
+            },
         ],
     },
 }
