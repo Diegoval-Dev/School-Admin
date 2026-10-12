@@ -7,6 +7,7 @@ Meta: un archivo **`Setup_ColegioJGC.exe`** que se copia a una USB, se ejecuta e
 - **PyInstaller `--onedir`** (carpeta), no `--onefile`: arranca más rápido, no descomprime en `%TEMP%` cada vez (menos riesgo con la base de datos) y los antivirus lo marcan menos.
 - **Inno Setup** crea un instalador estándar de Windows (Siguiente → Siguiente → Instalar), maneja actualizaciones y **desinstala sin tocar los datos**.
 - **El build se hace en Windows** (PyInstaller no compila cruzado). Hace falta: Python 3.12 64-bit, Inno Setup 6 (`iscc.exe` en el PATH).
+- **Desde macOS:** el desarrollo se hace en Mac y el build lo hace GitHub Actions (`.github/workflows/build-windows.yml`, ejecutar con "Run workflow" o creando un tag `vX.Y.Z`; el instalador queda en *Artifacts*). Alternativas: VM de Windows 11 (en Mac con chip Apple instalar Python **x64**) o una PC Windows. Sea cual sea, la prueba del instalador se hace en Windows real.
 - Sistema objetivo: **Windows 10 o 11, 64-bit**. (Python 3.12 no corre en Windows 7/8.)
 
 ## 2. Rutas (el punto donde más se rompe PyInstaller)

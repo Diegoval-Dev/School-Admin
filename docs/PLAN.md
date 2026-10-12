@@ -14,16 +14,16 @@ Marca cada check `[x]` al completarlo. Una fase = código + tests + commit. No a
 - [x] pytest configurado; primer test "arranca y responde 200 en /login/".
 
 ## Fase 1 — Modelos y administración  (docs/referencia/models_referencia.py)
-- [ ] Implementar modelos de `docs/MODELOS.md` y migraciones iniciales.
-- [ ] Admin de **Estudiante** con inlines: Responsables (padre/madre/tutor), Contactos, Direcciones, Matrículas. Buscador por código, nombres, apellidos y documento. Filtros: estado, grado, jornada, ciclo.
-- [ ] Admin de **Docente** con inline de Asignaciones (curso, grado, ciclo). Admin de **Materia** y **CicloEscolar**.
-- [ ] Sin borrado físico: `has_delete_permission=False` y acción masiva de borrar removida. Estados: Activo / Retirado / Graduado.
-- [ ] Edad calculada (propiedad) y mostrada en el listado, nunca guardada.
-- [ ] Código autogenerado si se deja vacío (`services/codigos.py`).
-- [ ] Validación: CUI de 13 dígitos cuando el tipo es CUI; pasaporte alfanumérico; un estudiante no puede tener dos matrículas en el mismo ciclo.
-- [ ] Auditoría con `simple_history` visible en el botón "Historial" de cada registro.
-- [ ] Grupos y permisos: **Directora** y **Secretaria** (migración de datos que los crea). Pantalla de **configuración inicial** (crear la cuenta de la directora si no hay usuarios).
-- [ ] Comando `cargar_demo`.
+- [x] Implementar modelos de `docs/MODELOS.md` y migraciones iniciales.
+- [x] Admin de **Estudiante** con inlines: Responsables (padre/madre/tutor), Contactos, Direcciones, Matrículas. Buscador por código, nombres, apellidos y documento. Filtros: estado, grado, jornada, ciclo.
+- [x] Admin de **Docente** con inline de Asignaciones (curso, grado, ciclo). Admin de **Materia** y **CicloEscolar**.
+- [x] Sin borrado físico: `has_delete_permission=False` y acción masiva de borrar removida. Estados: Activo / Retirado / Graduado.
+- [x] Edad calculada (propiedad) y mostrada en el listado, nunca guardada.
+- [x] Código autogenerado si se deja vacío (`services/codigos.py`).
+- [x] Validación: CUI de 13 dígitos cuando el tipo es CUI; pasaporte alfanumérico; un estudiante no puede tener dos matrículas en el mismo ciclo.
+- [x] Auditoría con `simple_history` visible en el botón "Historial" de cada registro.
+- [x] Grupos y permisos: **Directora** y **Secretaria** (migración de datos que los crea). Pantalla de **configuración inicial** (crear la cuenta de la directora si no hay usuarios).
+- [x] Comando `cargar_demo`.
 - **Tests:** edad; unicidad de matrícula por ciclo; código autogenerado sin colisiones; `PROTECT` impide borrar estudiante con pagos; Secretaria no puede borrar.
 
 ## Fase 2 — Pagos (mensualidades)
@@ -70,6 +70,7 @@ Marca cada check `[x]` al completarlo. Una fase = código + tests + commit. No a
 - [ ] `installer/colegio.iss` (Inno Setup): instala en `C:\ColegioJGC\app`, crea `C:\ColegioJGC\datos` y `respaldos` **solo si no existen**, acceso directo en escritorio, el desinstalador **jamás** borra `datos`/`respaldos`, ícono con el escudo.
 - [ ] `build.bat`: venv limpio → `pip install` → `pytest` → `pyinstaller` → `iscc` → `dist\Setup_ColegioJGC.exe`.
 - [ ] **Pruebas en PC limpia sin Python** (VM o máquina real): instalar, primer arranque, crear cuenta, cargar datos, cerrar, reabrir, actualizar a una versión nueva (datos intactos), desinstalar/reinstalar (datos intactos), matar el proceso a mitad de guardado (sin corrupción), antivirus/SmartScreen (documentar cómo aprobar el instalador).
+- [ ] Verificar que `.github/workflows/build-windows.yml` funcione: el workflow debe terminar en verde y dejar `Setup_ColegioJGC_*.exe` como artefacto descargable (`build.bat` no interactivo).
 - [ ] Versión visible en pie de página y en el nombre del instalador (`version.txt`).
 
 ---

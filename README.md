@@ -25,7 +25,7 @@ Comandos útiles dentro de Claude Code:
 | `assets/escudo_colegio.png` | Escudo extraído del Word |
 
 ## Notas
-- El **build del instalador** requiere Windows (Python 3.12 64-bit + Inno Setup 6). El desarrollo puede hacerse en cualquier SO.
+- El **build del instalador** requiere Windows: usa GitHub Actions (`.github/workflows/build-windows.yml`) si desarrollas en Mac. Probar siempre el instalador en Windows real.
 - Probar el `Setup.exe` en una **PC limpia sin Python** antes de llevarlo a la directora (checklist en `docs/EMPAQUETADO.md §8`).
 - Los archivos en `docs/referencia/` son punto de partida: no se han ejecutado.
 - Decisiones por confirmar con el colegio (hay valores por defecto): `CLAUDE.md §9` (unidades por año, escala de notas, etc.).

@@ -35,7 +35,7 @@ Todo se ingresa **manualmente** por 1–2 usuarios. No hay portal para padres ni
 - HTMX **opcional** y servido localmente (archivo en `static/`), solo si simplifica asistencia/notas. Si no, JS vanilla.
 - Tests con `pytest` + `pytest-django`
 - Empaquetado: PyInstaller (`--onedir`, NO `--onefile`) + Inno Setup para el `Setup.exe`
-- Plataforma objetivo: **Windows 10/11 64-bit**. El desarrollo puede ser en cualquier SO, pero el build final se hace en Windows.
+- Plataforma objetivo: **Windows 10/11 64-bit**. El desarrollo se hace en **macOS** (y debe funcionar también en Windows); el build final se hace en Windows, normalmente con GitHub Actions (`.github/workflows/build-windows.yml`). No uses nada exclusivo de Windows fuera de las rutas congeladas del launcher (`ctypes.windll` va protegido con try/except) y mantén `build.bat` con saltos de línea CRLF y **sin `pause`** (corre sin interacción en CI).
 
 ## 4. Estructura esperada del repo
 

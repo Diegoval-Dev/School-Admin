@@ -1,0 +1,39 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configuración inicial</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f6f8; margin: 0; color: #1f2933; }
+    main { max-width: 420px; margin: 40px auto; padding: 0 16px; }
+    .tarjeta { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .escudo { display: block; margin: 0 auto 16px; max-width: 120px; }
+    h1 { font-size: 1.3rem; text-align: center; margin: 0 0 8px; }
+    p.ayuda { font-size: .95rem; color: #52606d; text-align: center; }
+    label { display: block; margin-top: 14px; font-weight: 600; }
+    input { width: 100%; box-sizing: border-box; padding: 12px; font-size: 1rem; border: 1px solid #cbd2d9; border-radius: 8px; margin-top: 6px; }
+    .errores { color: #b42318; font-size: .9rem; margin-top: 4px; }
+    button { width: 100%; margin-top: 22px; padding: 14px; font-size: 1.05rem; background: #1f6feb; color: #fff; border: 0; border-radius: 8px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="tarjeta">
+      <img class="escudo" src="{% static 'colegio/escudo_colegio.png' %}" alt="Escudo del colegio">
+      <h1>Configuración inicial</h1>
+      <p class="ayuda">Crea la cuenta de la directora. Esta pantalla solo aparece la primera vez.</p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% for campo in form %}
+          <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+          {{ campo }}
+          {% for error in campo.errors %}<div class="errores">{{ error }}</div>{% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}<div class="errores">{{ error }}</div>{% endfor %}
+        <button type="submit">Crear cuenta</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
